@@ -1,2 +1,2 @@
-# ws
+# websockets
 WebSockets Service
