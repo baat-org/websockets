@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'com.gradle.build-scan' version '2.0.2'
+    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+}
+
+repositories {
+    jcenter()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-dependencies:2.0.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket:2.0.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp:2.0.5.RELEASE'
+
+    implementation 'org.apache.commons:commons-lang3:3.4'
+
+    implementation 'org.baat:core:1.0'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.0.5.RELEASE'
+    testImplementation 'junit:junit:4.12'
+
+    components {
+        withModule('org.springframework:spring-beans') {
+            allVariants {
+                withDependencyConstraints {
+                    // Need to patch constraints because snakeyaml is an optional dependency
+                    it.findAll { it.name == 'snakeyaml' }.each { it.version { strictly '1.19' } }
+                }
+            }
+        }
+    }
+}
+
+buildScan {
+
+    // always accept the terms of service
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+
+    // always publish a build scan
+    publishAlways()
+}
+
+bootJar {
+    mainClassName = 'org.baat.websockets.application.WSApplication'
+}
+

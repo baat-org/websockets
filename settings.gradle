@@ -1,0 +1,3 @@
+rootProject.name = 'websockets'
+enableFeaturePreview('IMPROVED_POM_SUPPORT')
+
