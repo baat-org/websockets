@@ -1,4 +1,4 @@
-FROM java:8
+FROM openjdk:8-jre-alpine
 
 # Dockerfile author / maintainer
 MAINTAINER Sachin Goyal <sachin.goyal.se@gmail.com>
