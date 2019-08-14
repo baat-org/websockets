@@ -22,7 +22,7 @@ public class WSConfig implements WebSocketConfigurer {
 
 	@Override
 	public void registerWebSocketHandlers(final WebSocketHandlerRegistry registry) {
-		registry.addHandler(userSessionHandler(), "/baat-ws").setAllowedOrigins("*");
+		registry.addHandler(userSessionHandler(), "/websockets").setAllowedOrigins("*");
 	}
 
 }
