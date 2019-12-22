@@ -1,9 +1,11 @@
 package org.baat.websockets.receiver;
 
-import org.baat.core.transfer.chat.ChatWSMessage;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.baat.core.transfer.chat.ChatMessage;
 import org.baat.core.transfer.chat.ReplyMessage;
 import org.baat.websockets.handler.UserSessionHandler;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,17 +13,23 @@ import java.io.IOException;
 
 @Component
 public class ChatWSMessageReceiver {
+    private final static Logger LOGGER = LoggerFactory.getLogger(ChatWSMessageReceiver.class);
 
-	@Autowired
-	UserSessionHandler userSessionHandler;
+    @Autowired
+    UserSessionHandler userSessionHandler;
 
-	public void receiveMessage(final String rawChatWSMessage) throws IOException {
-		final ObjectMapper objectMapper = new ObjectMapper();
-		final ChatWSMessage chatWSMessage = objectMapper.readValue(rawChatWSMessage, ChatWSMessage.class);
+    public void receiveMessage(final String rawChatMessage) throws IOException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final ChatMessage chatMessage = objectMapper.readValue(rawChatMessage, ChatMessage.class);
 
-		final ReplyMessage replyMessage = new ReplyMessage(chatWSMessage.getSenderUserId(), chatWSMessage.getRecipientChannelId(), chatWSMessage.getTextMessage());
-		final String rawReplyMessage = objectMapper.writeValueAsString(replyMessage);
+        try {
+            final ReplyMessage replyMessage = new ReplyMessage(userSessionHandler.findUserForToken(chatMessage.getSenderUserToken()).getId(),
+                    chatMessage.getRecipientChannelId(), chatMessage.getTextMessage());
+            final String rawReplyMessage = objectMapper.writeValueAsString(replyMessage);
 
-		userSessionHandler.sendMessage(chatWSMessage.getRecipientUserTokens(), rawReplyMessage);
-	}
+            userSessionHandler.sendMessage(chatMessage.getRecipientUserId(), rawReplyMessage);
+        } catch (Exception exception) {
+            LOGGER.error("Error sending message: " + exception);
+        }
+    }
 }

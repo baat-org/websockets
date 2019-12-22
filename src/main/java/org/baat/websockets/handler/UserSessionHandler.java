@@ -1,6 +1,7 @@
 package org.baat.websockets.handler;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.baat.core.transfer.user.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
@@ -56,24 +57,14 @@ public class UserSessionHandler extends AbstractWebSocketHandler {
         removeSession(session);
     }
 
-    public void sendMessage(final Set<String> userTokens, final String message) throws IOException {
-        for (final String userToken : userTokens) {
+    public void sendMessage(final Long userId, final String message) throws IOException {
+        for (final String userToken : findValidUserTokens(userId)) {
             final Set<WebSocketSession> sessions = SESSIONS_BY_USER_TOKENS.get(userToken);
             if (sessions != null) {
                 for (final WebSocketSession session : sessions) {
                     session.sendMessage(new TextMessage(message));
                 }
             }
-        }
-    }
-
-    private boolean validUserToken(final String userToken) {
-        try {
-            return BooleanUtils.isTrue(new RestTemplate().getForObject(
-                    URI.create(userServiceURI + "/validateUserToken/" + userToken), Boolean.class));
-        } catch (Exception exception) {
-            LOGGER.error("Error validating user token {}", userToken, exception);
-            return false;
         }
     }
 
@@ -91,6 +82,27 @@ public class UserSessionHandler extends AbstractWebSocketHandler {
             if (sessions.isEmpty()) {
                 SESSIONS_BY_USER_TOKENS.remove(userToken);
             }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public Set<String> findValidUserTokens(final Long userId) {
+        return new RestTemplate().getForObject(
+                URI.create(userServiceURI + "/userTokens/" + userId), Set.class);
+    }
+
+    public UserInfo findUserForToken(final String userToken) {
+        return new RestTemplate().getForObject(
+                URI.create(userServiceURI + "/userForToken/" + userToken), UserInfo.class);
+    }
+
+    public boolean validUserToken(final String userToken) {
+        try {
+            return BooleanUtils.isTrue(new RestTemplate().getForObject(
+                    URI.create(userServiceURI + "/validateUserToken/" + userToken), Boolean.class));
+        } catch (Exception exception) {
+            LOGGER.error("Error validating user token {}", userToken, exception);
+            return false;
         }
     }
 }
