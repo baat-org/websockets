@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk/openjdk15:alpine-jre
 
 # Dockerfile author / maintainer
 MAINTAINER Sachin Goyal <sachin.goyal.se@gmail.com>

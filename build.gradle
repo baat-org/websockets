@@ -1,7 +1,6 @@
 plugins {
     id 'java'
-    id 'com.gradle.build-scan' version '2.0.2'
-    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'org.springframework.boot' version '2.4.0'
     id 'io.spring.dependency-management' version '1.0.7.RELEASE'
 }
 
@@ -11,15 +10,15 @@ repositories {
 }
 
 ext {
-    springBootVersion = '2.0.5.RELEASE'
+    springBootVersion = '2.4.0'
     commonsLang3Version = '3.4'
     mySQLConnectorVersion = '5.1.44'
     junitVersion = '4.12'
     baatCoreVersion = '1.0'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.15
+targetCompatibility = 1.15
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-dependencies:${project.springBootVersion}"
