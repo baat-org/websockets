@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websockets
+  labels:
+    app: websockets
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: websockets
+  template:
+    metadata:
+      labels:
+        app: websockets
+    spec:
+      containers:
+        - name: user
+          image: sachingoyaldocker/baat-org-websockets:latest
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: RABBITMQ_HOST
+              value: "chat-mq"
+            - name: USER_SERVICE_URI
+              value: "http://user:8080"
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: "Always"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websockets
+  labels:
+    app: websockets
+spec:
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: websockets
+  type: LoadBalancer # Externally visible
