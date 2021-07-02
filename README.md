@@ -2,7 +2,7 @@
 
 Websockets Service
 
-## Setup Details
+## Cluster Setup Details
 
 * [Infra README](https://github.com/baat-org/infra/blob/master/README.md)
 
@@ -12,14 +12,15 @@ Websockets Service
 ./rebuildAndPush.sh
 ```
 
-## Redeploy Service Locally (Minikube)
+## Redeploy Service
 
 ```
-./redeployServiceLocal.sh
+./redeployService.sh
 ```
 
-## Redeploy Service and Related Deps Locally (Minikube)
+## Redeploy Service and Related Deps
 
 ```
-./redeployLocal.sh
+./redeployAll.sh
 ```
+
