@@ -15,7 +15,7 @@ spec:
         app: websockets
     spec:
       containers:
-        - name: user
+        - name: websockets
           image: sachingoyaldocker/baat-org-websockets:latest
           env:
             - name: SERVER_PORT
