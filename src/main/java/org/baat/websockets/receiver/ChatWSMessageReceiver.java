@@ -23,11 +23,15 @@ public class ChatWSMessageReceiver {
         final ChatMessage chatMessage = objectMapper.readValue(rawChatMessage, ChatMessage.class);
 
         try {
-            final ReplyMessage replyMessage = new ReplyMessage(userSessionHandler.findUserForToken(chatMessage.getSenderUserToken()).getId(),
+            final ReplyMessage replyMessage = new ReplyMessage(chatMessage.getSenderUserId(),
                     chatMessage.getRecipientChannelId(), chatMessage.getTextMessage());
             final String rawReplyMessage = objectMapper.writeValueAsString(replyMessage);
 
-            userSessionHandler.sendMessage(chatMessage.getRecipientUserId(), rawReplyMessage);
+            if (chatMessage.getRecipientChannelId() != null) {
+                //TODO fetch users in the channel and send them all.
+            } else {
+                userSessionHandler.sendMessage(chatMessage.getRecipientUserId(), rawReplyMessage);
+            }
         } catch (Exception exception) {
             LOGGER.error("Error sending message: " + exception);
         }

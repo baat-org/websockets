@@ -91,11 +91,6 @@ public class UserSessionHandler extends AbstractWebSocketHandler {
                 URI.create(userServiceURI + "/userTokens/" + userId), Set.class);
     }
 
-    public UserInfo findUserForToken(final String userToken) {
-        return new RestTemplate().getForObject(
-                URI.create(userServiceURI + "/userForToken/" + userToken), UserInfo.class);
-    }
-
     public boolean validUserToken(final String userToken) {
         try {
             return BooleanUtils.isTrue(new RestTemplate().getForObject(
