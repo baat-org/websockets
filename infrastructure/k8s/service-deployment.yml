@@ -24,6 +24,8 @@ spec:
               value: "chat-mq"
             - name: USER_SERVICE_URI
               value: "http://user:8080"
+            - name: CHANNEL_SERVICE_URI
+              value: "http://channel:8080"
           ports:
             - containerPort: 8080
           imagePullPolicy: "Always"

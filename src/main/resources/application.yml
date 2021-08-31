@@ -6,3 +6,4 @@ server:
   port: ${SERVER_PORT}
 
 user_service_uri: ${USER_SERVICE_URI}
+channel_service_uri: ${CHANNEL_SERVICE_URI}
